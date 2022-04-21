@@ -64,3 +64,36 @@ Here we are going to add a new route that let us add a new post when the user cl
 
 ![creat new post](https://user-images.githubusercontent.com/57592040/164560203-9c9d9c2a-c0d4-43d6-af21-3a2deb98446d.gif)
 
+as we see when I click on **Create New Post** it will render make-post.html page and the amazing thing we gonna learn is using Flask CKEditor package to make the Blog Content (body) input in the WTForm into a full CKEditor.
+
+**First** we need to install this package by
+
+```python
+$ pip install flask-ckeditor
+```
+
+Second we need to import CKEditor and CKEditorField from flask_ckeditor like this:
+
+```python
+from flask_ckeditor import CKEditor, CKEditorField
+```
+
+And Finally this extension needs to be initialized in the usual way before it can be used:
+
+```python
+ckeditor = CKEditor(app)
+```
+
+and Our WTForm will look like this:
+
+```python
+class CreatePostForm(FlaskForm):
+    title = StringField("Blog Post Title", validators=[DataRequired()])
+    subtitle = StringField("Subtitle", validators=[DataRequired()])
+    author = StringField("Your Name", validators=[DataRequired()])
+    img_url = StringField("Blog Image URL", validators=[DataRequired(), URL()])
+    body = CKEditorField("Blog Content", validators=[DataRequired()])
+    submit = SubmitField("Submit Post")
+```
+
+as you see with body form attribute we used CKEditorField that will create the editor for us.

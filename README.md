@@ -148,3 +148,18 @@ Now we are going edit our make-post web page to add our WTForm and load ckeditor
   </div>
 </div>
 ```
+Here I want to mention that we can pass button map that its key is submit button and its bootstrap class is primary, for more info about quick form parameters you can check this documentation **[Here](https://pythonhosted.org/Flask-Bootstrap/forms.html#form-macro-reference)**.
+
+Finally after we create our new post you will see that this post showing html tags so we need to fix it by not skip the html tags and render is as will and we can do that by using filter safe as below in our post html web page like this.  
+
+```html
+<div class="col-lg-8 col-md-10 mx-auto">
+  <p>
+    {{ post.body | safe }}
+  </p>
+   <hr>
+   <div class="clearfix">
+  <a class="btn btn-primary float-right" href="{{ url_for('edit_post',post_id=post.id, action='Edit Post')}}">Edit Post</a>
+</div>
+  </div>
+```

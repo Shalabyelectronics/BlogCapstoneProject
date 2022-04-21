@@ -124,4 +124,5 @@ def add_new_post():
         return render_template("make-post.html", form=form, action=check_action)
 ```
 
-As you see I create an instance form from **CreatePostForm WTForm** then we checked which action we are going to do if we are going to **Create New post** or **Edit Post** 
+As you see I create an instance form from **CreatePostForm WTForm** then we checked which action we are going to do if we are going to **Create New post** or **Edit Post** by clicking the button, so if I clicked **Create New post button** we will pass New Blog Post to update our h1 page heading else if we clicked on **Edit post button** we will pass Edit Post as showing below:
+![update heading as action](https://user-images.githubusercontent.com/57592040/164565163-a128052b-a48f-4d5b-a668-b2954465415c.gif)

@@ -31,6 +31,7 @@ and now we need to create our route function as below:
 @app.route('/')
 def get_all_posts():
     posts = [post for post in db.session.query(BlogPost).all()]
+    # Or you can load posts by this way : BlogPost.query.all()
     return render_template("index.html", all_posts=posts)
 ```
 
@@ -54,3 +55,11 @@ and in our home page we can loop throw **all_posts** with Jinja 2 like this:
 <hr>
 {% endfor %}
 ```
+
+So far we are done from first step and we load all post in our home page.
+
+## STEP TWO : POST a NEW Blog Post
+
+Here we are going to add a new route that let us add a new post when the user click on the **"Create New Post"**  as below:
+
+![creat new post](C:\Users\dalla\Pictures\creat new post.gif)

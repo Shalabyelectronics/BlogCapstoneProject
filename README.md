@@ -62,4 +62,5 @@ So far we are done from first step and we load all post in our home page.
 
 Here we are going to add a new route that let us add a new post when the user click on the **"Create New Post"**  as below:
 
-![creat new post](C:\Users\dalla\Pictures\creat new post.gif)
+![creat new post](https://user-images.githubusercontent.com/57592040/164560203-9c9d9c2a-c0d4-43d6-af21-3a2deb98446d.gif)
+

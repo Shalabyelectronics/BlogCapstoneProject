@@ -126,3 +126,25 @@ def add_new_post():
 
 As you see I create an instance form from **CreatePostForm WTForm** then we checked which action we are going to do if we are going to **Create New post** or **Edit Post** by clicking the button, so if I clicked **Create New post button** we will pass New Blog Post to update our h1 page heading else if we clicked on **Edit post button** we will pass Edit Post as showing below:
 ![update heading as action](https://user-images.githubusercontent.com/57592040/164565163-a128052b-a48f-4d5b-a668-b2954465415c.gif)
+
+Now we are going edit our make-post web page to add our WTForm and load ckeditor as well as below:
+
+```html
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-md-10 mx-auto">
+      
+        <!-- This is where the form will go -->
+      <!-- Load ckeditor -->
+      {{ ckeditor.load() }}
+
+      <!-- Configure the ckeditor to tell it which field in WTForm will need to be a CKEditor. -->
+      {{ ckeditor.config(name='body') }}
+
+      <!-- Add WTF quickform -->
+      {{ wtf.quick_form(form,button_map= {'submit': 'primary'},novalidate=True) }}
+
+    </div>
+  </div>
+</div>
+```

@@ -84,7 +84,7 @@ And Finally this extension needs to be initialized in the usual way before it ca
 ckeditor = CKEditor(app)
 ```
 
-and Our WTForm will look like this:
+and Our WTForm CreatePostForm will look like this:
 
 ```python
 class CreatePostForm(FlaskForm):
@@ -97,3 +97,31 @@ class CreatePostForm(FlaskForm):
 ```
 
 as you see with body form attribute we used CKEditorField that will create the editor for us.
+to create our form we are going to use Flask Bootstrap package to create quick form and we explain how to do that before and if you need more info you can take a look for the documentation [here](https://pythonhosted.org/Flask-Bootstrap/forms.html).
+
+Now we need to create our route function like this :
+
+```python
+@app.route("/make-post", methods=["POST", "GET"])
+def add_new_post():
+    form = CreatePostForm()
+    check_action = request.args.get("action")
+    today_date = datetime.now()
+    date_format = today_date.strftime("%B %d, %Y")
+    if request.method == "POST":
+        if form.validate_on_submit():
+            new_post = BlogPost(title=request.form.get('title'),
+                                subtitle=request.form.get('subtitle'),
+                                date=date_format,
+                                author=request.form.get('author'),
+                                img_url=request.form.get('img_url'),
+                                body=request.form.get('body')
+                                )
+            db.session.add(new_post)
+            db.session.commit()
+            return redirect(url_for('get_all_posts'))
+    else:
+        return render_template("make-post.html", form=form, action=check_action)
+```
+
+As you see I create an instance form from **CreatePostForm WTForm** then we checked which action we are going to do if we are going to **Create New post** or **Edit Post** 

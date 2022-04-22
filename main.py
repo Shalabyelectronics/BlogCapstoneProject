@@ -3,12 +3,16 @@ from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from flask_wtf import FlaskForm
+from flask_wtf.csrf import CSRFProtect
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired, URL
 from flask_ckeditor import CKEditor, CKEditorField
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
+# enable CSRF protection
+app.config['CKEDITOR_ENABLE_CSRF'] = True
+csrf = CSRFProtect(app)
 ckeditor = CKEditor(app)
 Bootstrap(app)
 

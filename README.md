@@ -84,7 +84,7 @@ And Finally this extension needs to be initialized in the usual way before it ca
 ckeditor = CKEditor(app)
 ```
 
-and Our WTForm will look like this:
+and Our WTForm CreatePostForm will look like this:
 
 ```python
 class CreatePostForm(FlaskForm):
@@ -97,3 +97,88 @@ class CreatePostForm(FlaskForm):
 ```
 
 as you see with body form attribute we used CKEditorField that will create the editor for us.
+to create our form we are going to use Flask Bootstrap package to create quick form and we explain how to do that before and if you need more info you can take a look for the documentation [here](https://pythonhosted.org/Flask-Bootstrap/forms.html).
+
+Now we need to create our route function like this :
+
+```python
+@app.route("/make-post", methods=["POST", "GET"])
+def add_new_post():
+    form = CreatePostForm()
+    check_action = request.args.get("action")
+    today_date = datetime.now()
+    date_format = today_date.strftime("%B %d, %Y")
+    if request.method == "POST":
+        if form.validate_on_submit():
+            new_post = BlogPost(title=request.form.get('title'),
+                                subtitle=request.form.get('subtitle'),
+                                date=date_format,
+                                author=request.form.get('author'),
+                                img_url=request.form.get('img_url'),
+                                body=request.form.get('body')
+                                )
+            db.session.add(new_post)
+            db.session.commit()
+            return redirect(url_for('get_all_posts'))
+    else:
+        return render_template("make-post.html", form=form, action=check_action)
+```
+
+As you see I create an instance form from **CreatePostForm WTForm** then we checked which action we are going to do if we are going to **Create New post** or **Edit Post** by clicking the button, so if I clicked **Create New post button** we will pass New Blog Post to update our h1 page heading else if we clicked on **Edit post button** we will pass Edit Post as showing below:
+![update heading as action](https://user-images.githubusercontent.com/57592040/164565163-a128052b-a48f-4d5b-a668-b2954465415c.gif)
+
+Now we are going edit our make-post web page to add our WTForm and load ckeditor as well as below:
+
+```html
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8 col-md-10 mx-auto">
+      
+        <!-- This is where the form will go -->
+      <!-- Load ckeditor -->
+      {{ ckeditor.load() }}
+
+      <!-- Configure the ckeditor to tell it which field in WTForm will need to be a CKEditor. -->
+      {{ ckeditor.config(name='body') }}
+
+      <!-- Add WTF quickform -->
+      {{ wtf.quick_form(form,button_map= {'submit': 'primary'},novalidate=True) }}
+
+    </div>
+  </div>
+</div>
+```
+Here I want to mention that we can pass button map that its key is submit button and its bootstrap class is primary, for more info about quick form parameters you can check this documentation **[Here](https://pythonhosted.org/Flask-Bootstrap/forms.html#form-macro-reference)**.
+
+Finally after we create our new post you will see that this post showing html tags so we need to fix it by not skip the html tags and render is as will and we can do that by using filter safe as below in our post html web page like this.  
+
+```html
+<div class="col-lg-8 col-md-10 mx-auto">
+  <p>
+    {{ post.body | safe }}
+  </p>
+   <hr>
+   <div class="clearfix">
+  <a class="btn btn-primary float-right" href="{{ url_for('edit_post',post_id=post.id, action='Edit Post')}}">Edit Post</a>
+</div>
+  </div>
+```
+last problem after submitting our Blog Post is when we check our post the body content will look like this:
+
+![skip html tags](https://user-images.githubusercontent.com/57592040/164704451-bc95d698-0ded-4a94-99e4-8608a595e4e2.PNG)
+
+To fix it we need to use safe filter when we load our post body with jinja expressions  as below:
+
+```jinja2
+{{ post.body | safe}}
+```
+
+## Attention
+
+Using safe to render html tags in body content is dangerous, because any black hat could use this   **Security Bug** to Perform an attack called **XSS** or [**Cross Site Scripting**](https://owasp.org/www-community/attacks/xss/) in simple way it is an attack where the attacker injected your website with malicious scripts as showing below:
+
+![XSS](https://user-images.githubusercontent.com/57592040/164716934-39926112-bc3a-493e-b87c-70e497b37efd.gif)
+
+After you try to edit the same post you will not find the script tag that you wrote it but it is already saved on your Blogpost database as below:
+
+![script saved  in db](https://user-images.githubusercontent.com/57592040/164718835-903b4a45-4d04-4d07-9df5-facbed4149a7.gif)

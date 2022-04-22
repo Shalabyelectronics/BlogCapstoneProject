@@ -163,3 +163,6 @@ Finally after we create our new post you will see that this post showing html ta
 </div>
   </div>
 ```
+last problem after submitting our Blog Post is when we check our post the body content will look like this:
+
+![skip html tags](https://user-images.githubusercontent.com/57592040/164704451-bc95d698-0ded-4a94-99e4-8608a595e4e2.PNG)

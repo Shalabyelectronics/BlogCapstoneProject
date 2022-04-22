@@ -166,3 +166,16 @@ Finally after we create our new post you will see that this post showing html ta
 last problem after submitting our Blog Post is when we check our post the body content will look like this:
 
 ![skip html tags](https://user-images.githubusercontent.com/57592040/164704451-bc95d698-0ded-4a94-99e4-8608a595e4e2.PNG)
+
+To fix it we need to use safe filter when we load our post body with jinja expressions  as below:
+
+```jinja2
+{{ post.body | safe}}
+```
+
+## Attention
+
+Using safe to render html tags in body content is dangerous, because any black hat could use this   **Security Bug** to Perform an attack called **XSS** or [**Cross Site Scripting**](https://owasp.org/www-community/attacks/xss/) in simple way it is an attack where the attacker injected your website with malicious scripts as showing below:
+
+![XSS](https://user-images.githubusercontent.com/57592040/164716934-39926112-bc3a-493e-b87c-70e497b37efd.gif)
+

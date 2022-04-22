@@ -179,3 +179,6 @@ Using safe to render html tags in body content is dangerous, because any black h
 
 ![XSS](https://user-images.githubusercontent.com/57592040/164716934-39926112-bc3a-493e-b87c-70e497b37efd.gif)
 
+After you try to edit the same post you will not find the script tag that you wrote it but it is already saved on your Blogpost database as below:
+
+![script saved  in db](https://user-images.githubusercontent.com/57592040/164718835-903b4a45-4d04-4d07-9df5-facbed4149a7.gif)

@@ -261,6 +261,7 @@ And for edit post:
 ```html
 <a class="btn btn-primary float-right" href="{{ url_for('edit_post',post_id=post.id, action='Edit Post')}}">Edit Post</a>
 ```
+![update the heading](https://user-images.githubusercontent.com/57592040/164949545-7d7ac2b3-8863-4a0b-a2e9-6d17f8349fc9.gif)
 
 There is another way as Angela Yu provide [Here](https://gist.github.com/angelabauer/20715bb39cb3b2f824e0a3a282b5b9e5)
 
@@ -284,3 +285,31 @@ and we add it to our home page as ✘ after the date of each post so when click 
 ```html
 <a href="{{ url_for('delete_post', post_id=post.id) }}">✘</a>
 ```
+![delete post](https://user-images.githubusercontent.com/57592040/164949605-1c703da3-2c21-4a39-a12b-bd2fec196afb.gif)
+
+### Challenges 
+#### I tried to add code snippest option to the CKEditor but I didn't know the write way.
+
+The Editor load and there are no any problem but How to add a code snippest option:
+
+ What I did is I Download the CKEditor version 4.17 from [Here](https://ckeditor.com/ckeditor-4/download/ ) 
+
+Then I Did the configration to load the CKeditor locally as below: 
+
+`app.config['CKEDITOR_SERVE_LOCAL'] = True`
+
+ And then I copy the ckeditor folder to static folder and load it with jinja as below where I want to use it on the web page.
+
+ `{{ ckeditor.load(custom_url=url_for('static', filename='ckeditor/ckeditor.js')) }}`
+
+ I download the code snippest plugin from [Here](https://download.ckeditor.com/codesnippet/releases/codesnippet_4.17.2.zip )
+
+ Then I activated as Flask-CKeditor mentioned on their documentation like this 
+
+```python
+app.config['CKEDITOR_ENABLE_CODESNIPPET'] = True 
+
+app.config['CKEDITOR_CODE_THEME'] = 'school_book'
+```
+
+But nothing happened!!!

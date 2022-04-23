@@ -7,6 +7,28 @@ from flask_wtf.csrf import CSRFProtect
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired, URL
 from flask_ckeditor import CKEditor, CKEditorField
+import bleach
+
+
+def strip_invalid_html(content):
+    allowed_tags = ['a', 'abbr', 'acronym', 'address', 'b', 'br', 'div', 'dl', 'dt',
+                    'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'i', 'img',
+                    'li', 'ol', 'p', 'pre', 'q', 's', 'small', 'strike',
+                    'span', 'sub', 'sup', 'table', 'tbody', 'td', 'tfoot', 'th',
+                    'thead', 'tr', 'tt', 'u', 'ul']
+
+    allowed_attrs = {
+        'a': ['href', 'target', 'title'],
+        'img': ['src', 'alt', 'width', 'height'],
+    }
+
+    cleaned = bleach.clean(content,
+                           tags=allowed_tags,
+                           attributes=allowed_attrs,
+                           strip=True)
+
+    return cleaned
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
@@ -77,12 +99,13 @@ def add_new_post():
     date_format = today_date.strftime("%B %d, %Y")
     if request.method == "POST":
         if form.validate_on_submit():
+            body_content = strip_invalid_html(request.form.get('body'))
             new_post = BlogPost(title=request.form.get('title'),
                                 subtitle=request.form.get('subtitle'),
                                 date=date_format,
                                 author=request.form.get('author'),
                                 img_url=request.form.get('img_url'),
-                                body=request.form.get('body')
+                                body=body_content
                                 )
             db.session.add(new_post)
             db.session.commit()
@@ -105,12 +128,13 @@ def edit_post(post_id):
                                     )
     if request.method == "POST":
         if load_form_data.validate_on_submit():
+            body_content = strip_invalid_html(request.form.get('body'))
             post.title = request.form.get('title')
             post.subtitle = request.form.get('subtitle')
             post.date = date_format
             post.author = request.form.get('author')
             post.img_url = request.form.get('img_url')
-            post.body = request.form.get('body')
+            post.body = body_content
             db.session.commit()
             return redirect(url_for('get_all_posts'))
     return render_template("make-post.html", form=load_form_data, action=check_action)

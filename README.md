@@ -215,3 +215,53 @@ body=strip_invalid_html(article.body.data)
 ```
 
 And this code I got it from [Here](https://gist.github.com/angelabauer/7dbf4554ebba5fcccc5197bc1b857b7e) so before passing the Markup content from CKEditor to our database we are going to clean it first using the `strip_invalid_html(content)` function.
+
+## STEP THREE : Edit Existing Blog Posts
+
+And to do so we are going to add another end point that allow us to **Edit Existing Blog Post** and then add it to our **Edit Post button** so our end point route function will look like this:
+
+```python
+@app.route("/edit-post/<int:post_id>", methods=["GET", "POST"])
+def edit_post(post_id):
+    check_action = request.args.get("action")
+    today_date = datetime.now()
+    date_format = today_date.strftime("%B %d, %Y")
+    post = db.session.query(BlogPost).filter(BlogPost.id == post_id).first()
+    # Here we auto-populate the fields in the WTForm with the blog posts data.
+    load_form_data = CreatePostForm(title=post.title,
+                                    subtitle=post.subtitle,
+                                    author=post.author,
+                                    img_url=post.img_url,
+                                    body=post.body
+                                    )
+    if request.method == "POST":
+        if load_form_data.validate_on_submit():
+            body_content = strip_invalid_html(request.form.get('body'))
+            post.title = request.form.get('title')
+            post.subtitle = request.form.get('subtitle')
+            post.date = date_format
+            post.author = request.form.get('author')
+            post.img_url = request.form.get('img_url')
+            post.body = body_content
+            db.session.commit()
+            return redirect(url_for('get_all_posts'))
+    return render_template("make-post.html", form=load_form_data, action=check_action)
+```
+
+And I want to mention that to update the page heading from **New Blog Post** to **Edit Post** we can pass **action** parameter when we use `url_for` when the user click on Add New Blog Post or Edit Post as below:
+
+for adding new post:
+
+```html
+<a class="btn btn-primary float-right" href="{{ url_for('add_new_post',post_id=None, action='New Post')}}">Create New Post</a>
+```
+
+And for edit post:
+
+```html
+<a class="btn btn-primary float-right" href="{{ url_for('edit_post',post_id=post.id, action='Edit Post')}}">Edit Post</a>
+```
+
+There is another way as Angela Yu provide [Here](https://gist.github.com/angelabauer/20715bb39cb3b2f824e0a3a282b5b9e5)
+
+And why we didn't use PUT/PATCH Methods because HTML forms  Only use GET, POST Methods for more information [Here](https://softwareengineering.stackexchange.com/questions/114156/why-are-there-no-put-and-delete-methods-on-html-forms)

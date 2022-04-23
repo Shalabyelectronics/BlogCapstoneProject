@@ -182,3 +182,36 @@ Using safe to render html tags in body content is dangerous, because any black h
 After you try to edit the same post you will not find the script tag that you wrote it but it is already saved on your Blogpost database as below:
 
 ![script saved  in db](https://user-images.githubusercontent.com/57592040/164718835-903b4a45-4d04-4d07-9df5-facbed4149a7.gif)
+
+So I do not know how can I edit this configuration in Ckeditor but we can add side server process to clean the Markup string with bleach library  like code below:
+
+```python
+import bleach
+ 
+## strips invalid tags/attributes
+def strip_invalid_html(content):
+    allowed_tags = ['a', 'abbr', 'acronym', 'address', 'b', 'br', 'div', 'dl', 'dt',
+                    'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'hr', 'i', 'img',
+                    'li', 'ol', 'p', 'pre', 'q', 's', 'small', 'strike',
+                    'span', 'sub', 'sup', 'table', 'tbody', 'td', 'tfoot', 'th',
+                    'thead', 'tr', 'tt', 'u', 'ul']
+ 
+    allowed_attrs = {
+        'a': ['href', 'target', 'title'],
+        'img': ['src', 'alt', 'width', 'height'],
+    }
+ 
+    cleaned = bleach.clean(content,
+                           tags=allowed_tags,
+                           attributes=allowed_attrs,
+                           strip=True)
+ 
+    return cleaned
+ 
+## use strip_invalid_html-function before saving body
+body=strip_invalid_html(article.body.data)
+ 
+## you can test the code by using strong-tag
+```
+
+And this code I got it from [Here](https://gist.github.com/angelabauer/7dbf4554ebba5fcccc5197bc1b857b7e) so before passing the Markup content from CKEditor to our database we are going to clean it first using the `strip_invalid_html(content)` function.

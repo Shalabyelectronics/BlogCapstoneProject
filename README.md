@@ -265,3 +265,22 @@ And for edit post:
 There is another way as Angela Yu provide [Here](https://gist.github.com/angelabauer/20715bb39cb3b2f824e0a3a282b5b9e5)
 
 And why we didn't use PUT/PATCH Methods because HTML forms  Only use GET, POST Methods for more information [Here](https://softwareengineering.stackexchange.com/questions/114156/why-are-there-no-put-and-delete-methods-on-html-forms)
+
+## STEP FOUR : DELETE Blog Posts
+
+Final step in this project is to be able to delete Blog Posts and to do that we can add `/delete-post/<int:post_id>` end point and the route function will look as below:
+
+```python
+@app.route("/delete-post/<int:post_id>")
+def delete_post(post_id):
+    post = db.session.query(BlogPost).filter(BlogPost.id == post_id).first()
+    db.session.delete(post)
+    db.session.commit()
+    return redirect(url_for("get_all_posts"))
+```
+
+and we add it to our home page as ✘ after the date of each post so when click on it the post will be delated and redirect you to the home page again:
+
+```html
+<a href="{{ url_for('delete_post', post_id=post.id) }}">✘</a>
+```

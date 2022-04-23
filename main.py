@@ -11,7 +11,11 @@ from flask_ckeditor import CKEditor, CKEditorField
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '8BYkEfBA6O6donzWlSihBXox7C0sKR6b'
 # enable CSRF protection
+app.config['CKEDITOR_SERVE_LOCAL'] = True
 app.config['CKEDITOR_ENABLE_CSRF'] = True
+# app.config['CKEDITOR_PKG_TYPE'] = 'full'
+app.config['CKEDITOR_ENABLE_CODESNIPPET'] = True
+app.config['CKEDITOR_CODE_THEME'] = 'school_book'
 csrf = CSRFProtect(app)
 ckeditor = CKEditor(app)
 Bootstrap(app)

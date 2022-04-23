@@ -23,8 +23,8 @@
         
           <!-- This is where the form will go -->
         <!-- Load ckeditor -->
-        {{ ckeditor.load() }}
-
+        {{ ckeditor.load(custom_url=url_for('static', filename='ckeditor/ckeditor.js')) }}
+        {{ ckeditor.load_code_theme() }}
         <!-- Configure the ckeditor to tell it which field in WTForm will need to be a CKEditor. -->
         {{ ckeditor.config(name='body') }}
 
